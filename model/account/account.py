@@ -1,5 +1,4 @@
 from abc import ABC,abstractmethod
-
 class Account(ABC):
 
     def __init__(self,balance:float):
