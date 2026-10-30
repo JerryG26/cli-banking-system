@@ -1,6 +1,8 @@
 from account import Account
 from exception.invalid_amount_exception import InvalidAmountException
 
+#make the interest work 
+
 class SavingAccount(Account):
 
     def __init__(self,balance:float):

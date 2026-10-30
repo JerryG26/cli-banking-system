@@ -1,6 +1,7 @@
 from account import Account
 from exception.invalid_amount_exception import InvalidAmountException
 
+#Update checking account behavior
 class CheckingAccount(Account):
 
     def __init__(self,balance:float):
