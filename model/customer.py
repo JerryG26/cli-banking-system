@@ -1,17 +1,50 @@
 from user import User
 from datetime import datetime
+from account.account import Account
 from account.checking_account import CheckingAccount
 from account.saving_account import SavingAccount
+from exception.invalid_amount_exception import InvalidAmountException
 class Customer(User):
 
-    def __init__(self,name:str,password:str,saving_account:SavingAccount,checking_account:CheckingAccount):
+    def __init__(self,name:str,password:str,saving_account:Account):
         super().__init__(name,password)
         self.__address = ""
         self.__age = 18
         self.__brithday = ""
-        self.__saving_account = saving_account
-        self.__checking_account = checking_account
+        self.__account = saving_account
         self.__date_created = datetime.now()
+
+    def deposit(self,money)->bool:
+        try:
+            self.__account.deposit(money)
+        except InvalidAmountException as e:
+            print(e)
+            return False
+        return True
+    
+    def withdraw(self,money)->bool:
+        try:
+            self.__account.withdraw(money)
+        except InvalidAmountException as e:
+            print(e)
+            return False
+        return True
+
+    def pay(self,money)->bool:
+        try:
+            self.__account.pay(money)
+        except InvalidAmountException as e:
+            print(e)
+            return False
+        return True
+
+    def transfer(self,account:Account,money:float)->bool:
+        try:
+            self.__account.transfer_money(account,money)
+        except InvalidAmountException as e:
+            print(e)
+            return False
+        return True
 
     @property
     def address(self)->str:
@@ -24,14 +57,6 @@ class Customer(User):
     @property
     def birthday(self)->str:
         return self.__brithday
-
-    @property
-    def saving_account(self)->SavingAccount | None:
-        return self.__saving_account
-    
-    @property
-    def checking_account(self)->CheckingAccount | None:
-        return self.__checking_account
 
     @property
     def date_created(self)->datetime:
@@ -49,16 +74,10 @@ class Customer(User):
     def birthday(self,birthday)->None:
         self.__brithday = birthday
 
-    @saving_account.setter
-    def saving_account(self,saving_account:SavingAccount)->None:
-        self.__saving_account = saving_account
-
-    @checking_account.setter
-    def checking_account(self,checking_account:CheckingAccount)->None:
-        self.__checking_account = checking_account
-
+    #Special function for SavingAccount to set the current time for interest
     def set_current_date(self,current_date:datetime)->None:
-        self.__saving_account.last_interest_date = current_date
+        if isinstance(self.__account,SavingAccount):
+            self.__account.last_interest_date = current_date
 
     def __str__(self)->str:
         return "Customer Class"
